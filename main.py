@@ -31,7 +31,10 @@ app.scripts.config.serve_locally = True
 auth = FlaskLoginAuth(app, use_default_views=True)
 
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
-df = pd.read_feather('hellodash_medicare_ds2.feather')
+# df = pd.read_feather('hellodash_medicare_ds2.feather')
+
+
+
 rf  = joblib.load('hellodash_rf.pkl')
 df_x = df.drop(columns=['provider_type', 'average_medicare_payment_amt'])
 df_x = pd.get_dummies(df_x)
@@ -41,7 +44,25 @@ df = df[['predicted_average_medicare_payment_amt',
          'average_medicare_payment_amt', 
          'nppes_provider_state'
 		 ]]
-# client = bigquery.Client()
+client = bigquery.Client()
+sql = """
+SELECT 
+    line_srvc_cnt, 
+    bene_unique_cnt,
+    bene_day_srvc_cnt,
+    provider_type,
+    nppes_provider_state,
+    average_medicare_allowed_amt,
+    average_submitted_chrg_amt,
+    average_medicare_payment_amt,
+    average_medicare_standard_amt
+FROM
+    `bigquery-public-data.medicare.physicians_and_other_supplier_2014`
+WHERE
+    provider_type = "Nephrology"
+Limit 
+    1000000;
+"""
 # sql = """
 # SELECT
 #   OP.provider_state AS State,
@@ -83,7 +104,7 @@ df = df[['predicted_average_medicare_payment_amt',
 # LIMIT
 #   10000;
 # """
-# df = client.query(sql).to_dataframe()
+df = client.query(sql).to_dataframe()
 app.layout = html.Div(children=[
     html.H1(children='Hello Dash'),
 
