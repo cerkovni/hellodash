@@ -33,17 +33,6 @@ auth = FlaskLoginAuth(app, use_default_views=True)
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 # df = pd.read_feather('hellodash_medicare_ds2.feather')
 
-
-
-rf  = joblib.load('hellodash_rf.pkl')
-df_x = df.drop(columns=['provider_type', 'average_medicare_payment_amt'])
-df_x = pd.get_dummies(df_x)
-df['predicted_average_medicare_payment_amt'] = rf.predict(df_x.values)
-# df = df.drop(columns=['provider_type'])
-df = df[['predicted_average_medicare_payment_amt',
-         'average_medicare_payment_amt', 
-         'nppes_provider_state'
-		 ]]
 client = bigquery.Client()
 sql = """
 SELECT 
@@ -105,6 +94,16 @@ Limit
 #   10000;
 # """
 df = client.query(sql).to_dataframe()
+rf = joblib.load('hellodash_rf.pkl')
+df_x = df.drop(columns=['provider_type', 'average_medicare_payment_amt'])
+df_x = pd.get_dummies(df_x)
+df['predicted_average_medicare_payment_amt'] = rf.predict(df_x.values)
+# df = df.drop(columns=['provider_type'])
+df = df[['predicted_average_medicare_payment_amt',
+         'average_medicare_payment_amt',
+         'nppes_provider_state'
+         ]]
+
 app.layout = html.Div(children=[
     html.H1(children='Hello Dash'),
 
