@@ -13,3 +13,4 @@ google-cloud-bigquery>=0.29.0
 flask-session==0.3.1
 flask-login==0.4.1
 scikit-learn>=0.19.1
+scipy == 1.0
