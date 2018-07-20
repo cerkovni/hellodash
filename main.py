@@ -30,7 +30,7 @@ app = dash.Dash(__name__, url_base_pathname='/', server=server)
 app.scripts.config.serve_locally = True
 auth = FlaskLoginAuth(app, use_default_views=True)
 
-app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
+# app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 # df = pd.read_feather('hellodash_medicare_ds2.feather')
 
 client = bigquery.Client()
