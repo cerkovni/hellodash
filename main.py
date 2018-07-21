@@ -32,9 +32,9 @@ app.scripts.config.serve_locally = True
 auth = FlaskLoginAuth(app, use_default_views=True)
 
 # app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
-df = pd.read_feather('hellodash_medicare_ds2.feather')
+# df = pd.read_feather('hellodash_medicare_ds2.feather')
 
-# client = bigquery.Client()
+client = bigquery.Client()
 sql = """
 SELECT 
     line_srvc_cnt, 
@@ -94,7 +94,7 @@ Limit
 # LIMIT
 #   10000;
 # """
-# df = client.query(sql).to_dataframe()
+df = client.query(sql).to_dataframe()
 rf = joblib.load('hellodash_rf.pkl')
 df_x = df.drop(columns=['provider_type', 'average_medicare_payment_amt'])
 df_x = pd.get_dummies(df_x)
