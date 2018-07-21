@@ -26,7 +26,8 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 
 server = Flask(__name__)
-app = dash.Dash(__name__, url_base_pathname='/', server=server)
+app = dash.Dash(__name__, url_base_pathname='/',
+                server=server, csrf_protect=False)
 app.scripts.config.serve_locally = True
 auth = FlaskLoginAuth(app, use_default_views=True)
 
